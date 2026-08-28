@@ -1,8 +1,8 @@
 {
-  "name": "Six Month Strong",
-  "short_name": "Strong",
+  "name": "Sadhana",
+  "short_name": "Sadhana",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f4f2ed",
-  "theme_color": "#111111"
+  "background_color": "#040c0b",
+  "theme_color": "#171020"
 }
