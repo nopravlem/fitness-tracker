@@ -1,80 +1,24 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-
-type SetLog = { weight: string; reps: string };
-type Exercise = { name: string; target: string; note?: string; sets: SetLog[] };
-type DayLog = { done: boolean; energy: number; protein: boolean; water: boolean; exercises: Exercise[] };
-
-const workout: Exercise[] = [
-  { name: 'Bench Press', target: '3 × 5', note: 'Start conservatively. Add weight only after clean reps.', sets: [{weight:'',reps:''},{weight:'',reps:''},{weight:'',reps:''}] },
-  { name: 'Assisted Pull-ups', target: '4 × 5–8', note: 'Use the least assistance that keeps every rep controlled.', sets: [{weight:'',reps:''},{weight:'',reps:''},{weight:'',reps:''},{weight:'',reps:''}] },
-  { name: 'Push-up Progression', target: '3 quality sets', note: 'Incline or floor — stop 1–2 reps before form breaks.', sets: [{weight:'BW',reps:''},{weight:'BW',reps:''},{weight:'BW',reps:''}] },
-  { name: 'Seated Cable Row', target: '3 × 8–12', sets: [{weight:'',reps:''},{weight:'',reps:''},{weight:'',reps:''}] },
-  { name: 'Dead Bug', target: '3 × 8 / side', sets: [{weight:'BW',reps:''},{weight:'BW',reps:''},{weight:'BW',reps:''}] },
-];
-
-const freshLog = (): DayLog => ({ done:false, energy:3, protein:false, water:false, exercises: JSON.parse(JSON.stringify(workout)) });
-
-export default function Home() {
-  const [tab, setTab] = useState<'today'|'plan'|'progress'>('today');
-  const [log, setLog] = useState<DayLog>(freshLog());
-  const key = useMemo(() => `fitness-${new Date().toISOString().slice(0,10)}`, []);
-
-  useEffect(() => {
-    const saved = localStorage.getItem(key);
-    if (saved) setLog(JSON.parse(saved));
-  }, [key]);
-  useEffect(() => { localStorage.setItem(key, JSON.stringify(log)); }, [key, log]);
-
-  function editSet(exerciseIndex:number, setIndex:number, field:keyof SetLog, value:string) {
-    setLog(prev => {
-      const next = structuredClone(prev);
-      next.exercises[exerciseIndex].sets[setIndex][field] = value;
-      return next;
-    });
-  }
-
-  return <main className="shell">
-    <header>
-      <div><p className="eyebrow">6 MONTH PROJECT</p><h1>Strong, capable, consistent.</h1></div>
-      <div className="streak">Day 1</div>
-    </header>
-
-    {tab === 'today' && <>
-      <section className="hero card">
-        <p className="eyebrow">TODAY · UPPER + SKILLS</p>
-        <h2>Build the things you actually want to be good at.</h2>
-        <p>Strength + pull-up/push-up practice + core. Walking counts as your baseline activity.</p>
-        <div className="checks">
-          <button className={log.protein?'active':''} onClick={()=>setLog({...log,protein:!log.protein})}>✓ Protein target</button>
-          <button className={log.water?'active':''} onClick={()=>setLog({...log,water:!log.water})}>✓ Hydration</button>
-        </div>
-      </section>
-
-      <div className="sectionTitle"><h2>Workout</h2><span>45–60 min</span></div>
-      {log.exercises.map((ex, ei) => <section className="card exercise" key={ex.name}>
-        <div className="exerciseHead"><div><h3>{ex.name}</h3><p>{ex.target}</p></div><span>{ei+1}</span></div>
-        {ex.note && <p className="note">{ex.note}</p>}
-        <div className="setHeader"><span>SET</span><span>WEIGHT / ASSIST</span><span>REPS</span></div>
-        {ex.sets.map((set, si) => <div className="setRow" key={si}>
-          <b>{si+1}</b>
-          <input aria-label={`${ex.name} set ${si+1} weight`} value={set.weight} placeholder="—" onChange={e=>editSet(ei,si,'weight',e.target.value)} />
-          <input aria-label={`${ex.name} set ${si+1} reps`} inputMode="numeric" value={set.reps} placeholder="—" onChange={e=>editSet(ei,si,'reps',e.target.value)} />
-        </div>)}
-      </section>)}
-
-      <section className="card energy"><h3>How did today feel?</h3><div>{[1,2,3,4,5].map(n=><button key={n} className={log.energy===n?'active':''} onClick={()=>setLog({...log,energy:n})}>{n}</button>)}</div><p>1 = wrecked · 5 = could do more</p></section>
-      <button className="finish" onClick={()=>setLog({...log,done:!log.done})}>{log.done?'✓ Workout complete':'Finish workout'}</button>
-    </>}
-
-    {tab === 'plan' && <section className="card plan"><p className="eyebrow">WEEKLY RHYTHM</p><h2>Your training has a direction now.</h2>
-      <p><b>Day A</b> · Upper strength + push-up/pull-up skills + core</p><p><b>Day B</b> · Lower strength + knee capacity + core</p><p><b>Day C</b> · Cardio + mobility</p><p><b>Day D</b> · Upper/back + skills + abs</p><p><b>Day E</b> · Lower/full body + conditioning</p>
-      <hr/><p><b>Travel blocks</b></p><p>India · Oct 25 → ~Nov 8</p><p>Thanksgiving week · recovery/travel mode</p><p>Dec 20 → Jan 2 · home/holiday mode</p><p className="note">Travel weeks preserve momentum with walking, mobility, and short bodyweight sessions instead of pretending your normal gym schedule still exists.</p>
-    </section>}
-
-    {tab === 'progress' && <><section className="card"><p className="eyebrow">THE SCOREBOARD</p><h2>Performance first.</h2><div className="metrics"><div><strong>Push-ups</strong><span>Build → floor reps</span></div><div><strong>Pull-ups</strong><span>Assisted → unassisted</span></div><div><strong>Running</strong><span>Build aerobic capacity</span></div><div><strong>Core</strong><span>Control + endurance</span></div></div></section><section className="card"><h3>6-month outcome</h3><p>We care about looking fitter, but the plan is built around measurable abilities so you aren't just doing random lifting and hoping your body changes.</p></section></>}
-
-    <nav><button className={tab==='today'?'active':''} onClick={()=>setTab('today')}>Today</button><button className={tab==='plan'?'active':''} onClick={()=>setTab('plan')}>Plan</button><button className={tab==='progress'?'active':''} onClick={()=>setTab('progress')}>Progress</button></nav>
-  </main>
-}
+import { useEffect, useState } from 'react';
+type SetLog={weight:string;reps:string}; type Exercise={name:string;target:string;note?:string;sets:SetLog[]}; type DayLog={done:boolean;energy:number;protein:boolean;water:boolean;exercises:Exercise[]};
+type PreviousRow={date:string;exerciseName:string;setNumber:number;weight:string|null;reps:number|null};
+const workout:Exercise[]=[
+{name:'Bench Press',target:'3 × 5',note:'Start conservatively. Add weight only after clean reps.',sets:[{weight:'',reps:''},{weight:'',reps:''},{weight:'',reps:''}]},
+{name:'Assisted Pull-ups',target:'4 × 5–8',note:'Use the least assistance that keeps every rep controlled.',sets:Array.from({length:4},()=>({weight:'',reps:''}))},
+{name:'Push-up Progression',target:'3 quality sets',note:'Incline or floor — stop 1–2 reps before form breaks.',sets:Array.from({length:3},()=>({weight:'BW',reps:''}))},
+{name:'Seated Cable Row',target:'3 × 8–12',sets:Array.from({length:3},()=>({weight:'',reps:''}))},
+{name:'Dead Bug',target:'3 × 8 / side',sets:Array.from({length:3},()=>({weight:'BW',reps:''}))}];
+const fresh=():DayLog=>({done:false,energy:3,protein:false,water:false,exercises:structuredClone(workout)});
+function suggestion(ex:Exercise,rows:PreviousRow[]){const dates=[...new Set(rows.filter(r=>r.exerciseName===ex.name).map(r=>r.date))];if(!dates.length)return 'First logged session — establish a clean baseline.';const last=rows.filter(r=>r.exerciseName===ex.name&&r.date===dates[0]);const reps=last.map(r=>r.reps??0);const weight=last[0]?.weight||'same load';const total=reps.reduce((a,b)=>a+b,0);if(ex.name==='Assisted Pull-ups')return `Last: ${weight} assist · ${reps.join('/')} reps. Beat total reps (${total}) first; once all sets hit 8, reduce assistance.`;if(ex.name==='Push-up Progression')return `Last: ${reps.join('/')} reps. Beat ${total} total clean reps, then lower the incline when 3 sets are strong.`;if(ex.name==='Bench Press')return `Last: ${weight} · ${reps.join('/')} reps. Reach 5/5/5 cleanly before adding weight.`;return `Last: ${weight} · ${reps.join('/')} reps. Beat ${total} total reps within the target range before increasing load.`}
+export default function Home(){const[tab,setTab]=useState<'today'|'plan'|'progress'>('today');const[log,setLog]=useState<DayLog>(fresh());const[previous,setPrevious]=useState<PreviousRow[]>([]);const[saving,setSaving]=useState(false);const[loaded,setLoaded]=useState(false);
+useEffect(()=>{fetch('/api/workouts/today').then(r=>r.json()).then(data=>{setPrevious(data.previous||[]);if(data.log){const next=fresh();next.done=data.log.done;next.energy=data.log.energy;next.protein=data.log.protein;next.water=data.log.water;for(const row of data.log.rows){const ex=next.exercises.find(e=>e.name===row.exerciseName);if(ex&&ex.sets[row.setNumber-1])ex.sets[row.setNumber-1]={weight:row.weight||'',reps:row.reps?.toString()||''};}setLog(next);}setLoaded(true);}).catch(()=>setLoaded(true));},[]);
+async function save(next=log){setSaving(true);try{await fetch('/api/workouts/today',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(next)});}finally{setSaving(false)}}
+function editSet(ei:number,si:number,field:keyof SetLog,value:string){setLog(p=>{const n=structuredClone(p);n.exercises[ei].sets[si][field]=value;return n})}
+return <main className="shell"><header><div><p className="eyebrow">6 MONTH PROJECT</p><h1>Strong, capable, consistent.</h1></div><div className="streak">{loaded?'DB synced':'Loading…'}</div></header>
+{tab==='today'&&<><section className="hero card"><p className="eyebrow">TODAY · UPPER + SKILLS</p><h2>Build the things you actually want to be good at.</h2><p>Your previous session now drives today's target.</p><div className="checks"><button className={log.protein?'active':''} onClick={()=>setLog({...log,protein:!log.protein})}>✓ Protein target</button><button className={log.water?'active':''} onClick={()=>setLog({...log,water:!log.water})}>✓ Hydration</button></div></section><div className="sectionTitle"><h2>Workout</h2><span>45–60 min</span></div>
+{log.exercises.map((ex,ei)=><section className="card exercise" key={ex.name}><div className="exerciseHead"><div><h3>{ex.name}</h3><p>{ex.target}</p></div><span>{ei+1}</span></div><p className="note"><b>Next target:</b> {suggestion(ex,previous)}</p>{ex.note&&<p>{ex.note}</p>}<div className="setHeader"><span>SET</span><span>WEIGHT / ASSIST</span><span>REPS</span></div>{ex.sets.map((s,si)=><div className="setRow" key={si}><b>{si+1}</b><input value={s.weight} placeholder="—" onChange={e=>editSet(ei,si,'weight',e.target.value)}/><input inputMode="numeric" value={s.reps} placeholder="—" onChange={e=>editSet(ei,si,'reps',e.target.value)}/></div>)}</section>)}
+<section className="card energy"><h3>How did today feel?</h3><div>{[1,2,3,4,5].map(n=><button key={n} className={log.energy===n?'active':''} onClick={()=>setLog({...log,energy:n})}>{n}</button>)}</div><p>1 = wrecked · 5 = could do more</p></section><button className="finish" disabled={saving} onClick={()=>{const n={...log,done:true};setLog(n);save(n)}}>{saving?'Saving…':log.done?'✓ Saved to Postgres':'Finish & save workout'}</button></>}
+{tab==='plan'&&<section className="card plan"><p className="eyebrow">WEEKLY RHYTHM</p><h2>Your training has a direction now.</h2><p><b>Day A</b> · Upper strength + push-up/pull-up skills + core</p><p><b>Day B</b> · Lower strength + knee capacity + core</p><p><b>Day C</b> · Cardio + mobility</p><p><b>Day D</b> · Upper/back + skills + abs</p><p><b>Day E</b> · Lower/full body + conditioning</p></section>}
+{tab==='progress'&&<section className="card"><p className="eyebrow">THE SCOREBOARD</p><h2>Performance first.</h2><div className="metrics"><div><strong>Push-ups</strong><span>Build → floor reps</span></div><div><strong>Pull-ups</strong><span>Assisted → unassisted</span></div><div><strong>Running</strong><span>Build aerobic capacity</span></div><div><strong>Core</strong><span>Control + endurance</span></div></div></section>}
+<nav><button className={tab==='today'?'active':''} onClick={()=>setTab('today')}>Today</button><button className={tab==='plan'?'active':''} onClick={()=>setTab('plan')}>Plan</button><button className={tab==='progress'?'active':''} onClick={()=>setTab('progress')}>Progress</button></nav></main>}
