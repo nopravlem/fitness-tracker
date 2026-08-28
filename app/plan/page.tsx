@@ -7,6 +7,8 @@ export default function PlanPage(){
 
     <section className="card plan"><p className="eyebrow">DEFAULT WEEK</p><h2>Three hard days. No punishment workouts.</h2>{[1,2,3,4,5,6,0].map(d=><p key={d}><b>{['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d]}</b> · {weeklyPlans[d].label} — {weeklyPlans[d].description}</p>)}</section>
 
+    <section className="card calendarCta"><p className="eyebrow">CALENDAR VIEW</p><h2>See the whole six months by day.</h2><p className="subtle">Strength, cardio, Solidcore, recovery days, travel, deloads, and holiday breaks are all worked in.</p><Link className="secondaryLink" href="/plan/calendar">View calendar</Link></section>
+
     <section className="card"><p className="eyebrow">TRAINING BLOCKS</p>{trainingBlocks.map(b=><div className="blockRow" key={b.name}><b>{b.name}</b><span>{b.start} → {b.end}</span><p>{b.focus}</p></div>)}</section>
 
     <nav><Link href="/">Today</Link><Link className="active" href="/plan">Plan</Link></nav>
