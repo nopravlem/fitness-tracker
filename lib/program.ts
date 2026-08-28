@@ -42,7 +42,7 @@ export const strengthC:ProgramExercise[]=[
 export const weeklyPlans:Record<number,DayPlan>={
 1:{key:'A',label:'Strength A',kind:'strength',duration:'55–70 min',description:'Pull-up + push-up skills, strength, and core.',exercises:strengthA,mobility:['Hip 90/90','Ankle knee-to-wall','Chin tucks']},
 2:{key:'cardio',label:'Easy cardio + mobility',kind:'cardio',duration:'30–45 min',description:'Conversational aerobic work. No sprinting.',cardio:'30–40 min bike, elliptical, or incline walk',mobility:['90/90','Hip flexor','Adductor rock-backs','Ankle/calf','Neck + thoracic']},
-3:{key:'solidcore',label:'Solidcore',kind:'solidcore',duration:'Class',description:'Solidcore day. Optional short mobility afterward.',mobility:['Optional 10 min hips/neck/split']},
+3:{key:'midweek-recovery',label:'Recovery + mobility',kind:'recovery',duration:'10–20 min optional',description:'Solidcore is scheduled 4×/month on its actual booked dates. Otherwise use Wednesday as a lower-stress recovery/mobility day.',mobility:['Hips','Neck/upper back','Optional split practice']},
 4:{key:'B',label:'Strength B',kind:'strength',duration:'55–70 min',description:'Skills + upper/lower strength + abs.',exercises:strengthB,mobility:['Hip control','Ankle/calf','Neck + thoracic']},
 5:{key:'recovery',label:'Recovery',kind:'recovery',duration:'Flexible',description:'Normal NYC walking + mobility. No make-up workout.',mobility:['10–15 min hips','Ankle/calf','Neck/upper back','Split practice']},
 6:{key:'C',label:'Strength C + run',kind:'strength',duration:'60–80 min',description:'Strength followed by knee-aware run/cardio and split work.',exercises:strengthC,cardio:'Run/walk progression below symptom threshold',mobility:['Split practice','Hip flexor','Hamstring','Adductors']},
@@ -53,7 +53,11 @@ export const dateOverrides:Record<string,DayPlan>={
 '2026-08-28':{key:'launch',label:'Target walk + apartment reset',kind:'recovery',duration:'No gym',description:'Pick up goggles, work, dishes/cleaning, call super. No running. Normal walking counts.'},
 '2026-08-29':{key:'A',label:'Strength A',kind:'strength',duration:'55–70 min',description:'First formal strength day back. Conservative loads; skill work first.',exercises:strengthA,mobility:['Hip 90/90','Ankle knee-to-wall','Chin tucks']},
 '2026-08-30':{key:'recovery',label:'Recovery + mobility',kind:'recovery',duration:'10–15 min optional',description:'Normal walking plus optional hip/ankle/neck and split work.',mobility:['90/90','Ankle/calf','Neck/upper back','Split practice']},
-'2026-08-31':{key:'cardio',label:'Easy cardio + mobility',kind:'cardio',duration:'20–30 min optional',description:'Low impact and easy. Normal NYC walking can count. No sprints.',cardio:'20–30 min easy bike, elliptical, or incline walk',mobility:['Hips','Ankle/calf','Neck/upper back']}
+'2026-08-31':{key:'cardio',label:'Easy cardio + mobility',kind:'cardio',duration:'20–30 min optional',description:'Low impact and easy. Normal NYC walking can count. No sprints.',cardio:'20–30 min easy bike, elliptical, or incline walk',mobility:['Hips','Ankle/calf','Neck/upper back']},
+'2026-09-03':{key:'solidcore-0903',label:'Solidcore',kind:'solidcore',duration:'11:05 am · Signature50',description:'Upper East Side · Center Glutes & Back. This class replaces the normal hard workout for the day.',mobility:['Optional short mobility only if it feels good']},
+'2026-09-08':{key:'solidcore-0908',label:'Solidcore',kind:'solidcore',duration:'9:05 am · Signature50',description:'Upper East Side · Center Glutes & Chest. This class is the main training session for the day.',mobility:['Optional short mobility only if it feels good']},
+'2026-09-16':{key:'solidcore-0916',label:'Solidcore',kind:'solidcore',duration:'2:05 pm · Signature50',description:'Upper East Side · Center Glutes & Shoulders. This class is the main training session for the day.',mobility:['Optional short mobility only if it feels good']},
+'2026-09-26':{key:'solidcore-0926',label:'Solidcore',kind:'solidcore',duration:'2:00 pm · Signature50',description:'Upper East Side · Hamstrings & Arm Wrap. This class replaces Strength C for the day.',mobility:['Optional short mobility only if it feels good']}
 };
 
 export const runStages=[
