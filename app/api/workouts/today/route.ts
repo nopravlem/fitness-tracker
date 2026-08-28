@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { and, desc, eq, lt } from 'drizzle-orm';
-import { db } from '@/lib/db';
+import { getDb } from '@/lib/db';
 import { exercises, workoutSessions, workoutSets } from '@/lib/db/schema';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 type IncomingSet = { weight: string; reps: string };
 type IncomingExercise = { name: string; sets: IncomingSet[] };
@@ -12,6 +13,7 @@ type IncomingLog = { done: boolean; energy: number; protein: boolean; water: boo
 const today = () => new Date().toISOString().slice(0, 10);
 
 export async function GET() {
+  const db = getDb();
   const date = today();
   const current = await db.query.workoutSessions.findFirst({ where: eq(workoutSessions.date, date) });
   let log = null;
@@ -30,6 +32,7 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
+  const db = getDb();
   const body = await request.json() as IncomingLog;
   const date = today();
   const [session] = await db.insert(workoutSessions).values({ date, completed: body.done, energy: body.energy, proteinTarget: body.protein, hydrationTarget: body.water })
