@@ -80,5 +80,5 @@ export const trainingBlocks=[
 ];
 
 export function localDateKey(d=new Date()){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
-export function planForDate(d=new Date()){const key=localDateKey(d);const block=blockForDate(key);if(dateOverrides[key])return dateOverrides[key];if(block&&(block.name.includes('Recovery')||block.name.includes('Deload')||block.name.includes('India')))return {key:'recovery-block',label:block.name,kind:'recovery',duration:'Flexible',description:block.focus,mobility:['Walking','10–15 min mobility','Optional short bodyweight session']};return weeklyPlans[d.getDay()]}
+export function planForDate(d=new Date()):DayPlan{const key=localDateKey(d);const block=blockForDate(key);if(dateOverrides[key])return dateOverrides[key];if(block&&(block.name.includes('Recovery')||block.name.includes('Deload')||block.name.includes('India')))return {key:'recovery-block',label:block.name,kind:'recovery',duration:'Flexible',description:block.focus,mobility:['Walking','10–15 min mobility','Optional short bodyweight session']};return weeklyPlans[d.getDay()]}
 export function blockForDate(key=localDateKey()){return trainingBlocks.find(b=>key>=b.start&&key<=b.end)??null}
