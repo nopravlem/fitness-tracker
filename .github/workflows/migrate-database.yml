@@ -2,6 +2,12 @@ name: Migrate database
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'drizzle/**'
+      - 'drizzle.config.ts'
 
 permissions:
   contents: read
