@@ -28,7 +28,7 @@ function foodPlanForDate(d=new Date()){
 export default function Home(){
   const todayPlan=useMemo(()=>planForDate(),[]);const todayKey=useMemo(()=>localDateKey(),[]);const block=useMemo(()=>blockForDate(todayKey),[todayKey]);const food=useMemo(()=>foodPlanForDate(),[]);
   const projectDay=useMemo(()=>{const [sy,sm,sd]=PROGRAM_START.split('-').map(Number);const now=new Date();const diff=Math.floor((Date.UTC(now.getFullYear(),now.getMonth(),now.getDate())-Date.UTC(sy,sm-1,sd))/86400000);return Math.max(1,diff+1)},[]);
-  const[log,setLog]=useState<DayLog>(freshLog());const[previous,setPrevious]=useState<PreviousRow[]>([]);const[saving,setSaving]=useState(false);const[loaded,setLoaded]=useState(false);const[dbError,setDbError]=useState<string|null>(null);const[saved,setSaved]=useState(false);const[notice,setNotice]=useState<string|null>(null);const[progressRows,setProgressRows]=useState<ProgressRow[]>([]);
+  const[log,setLog]=useState<DayLog>(freshLog());const[previous,setPrevious]=useState<PreviousRow[]>([]);const[saving,setSaving]=useState(false);const[loaded,setLoaded]=useState(false);const[dbError,setDbError]=useState<string|null>(null);const[saved,setSaved]=useState(false);const[notice,setNotice]=useState<string|null>(null);const[progressRows,setProgressRows]=useState<ProgressRow[]>([]);const[menuOpen,setMenuOpen]=useState(false);
   const[cardio,setCardio]=useState({activity:'Run / walk',durationMinutes:'',distanceMiles:'',painDuring:'0',painAfter:'0',nextDayPain:'0',notes:''});
   const[progress,setProgress]=useState({weightLb:'',waistIn:'',pushups:'',pullupAssistanceLb:'',pullups:'',mileSeconds:'',splitDistanceIn:'',notes:''});
 
@@ -45,7 +45,7 @@ export default function Home(){
   function editSet(ei:number,si:number,field:keyof SetLog,value:string){setSaved(false);setLog(p=>{const n=structuredClone(p);n.exercises[ei].sets[si][field]=value;return n})}
 
   return <main className="shell">
-    <header><div><p className="eyebrow">6 MONTH PROJECT</p><h1>Strong, capable, consistent.</h1>{block&&<p className="subtle">{block.name} · {block.focus}</p>}</div><div className="streak">Day {projectDay}</div></header>
+    <header className="appHeader"><div><p className="eyebrow">6 MONTH PROJECT</p><h1>Cadence</h1><p className="dayLabel">Day {projectDay}</p>{block&&<p className="subtle">{block.name} · {block.focus}</p>}</div><div className="menuWrap"><button className={`menuButton ${menuOpen?'open':''}`} aria-label="Open menu" aria-expanded={menuOpen} onClick={()=>setMenuOpen(v=>!v)}><span/><span/><span/></button>{menuOpen&&<div className="menuPanel"><Link href="/progress" onClick={()=>setMenuOpen(false)}>Progress</Link></div>}</div></header>
     {dbError&&<section className="card errorCard"><p className="eyebrow">DATABASE SYNC ERROR</p><p>{dbError}</p></section>}{notice&&<section className="card successCard"><b>{notice}</b></section>}
 
     <section className="hero card"><p className="eyebrow">TODAY · {todayPlan.label.toUpperCase()}</p><h2>{todayPlan.description}</h2><p>{todayPlan.duration}{todayPlan.cardio?` · ${todayPlan.cardio}`:''}</p></section>
