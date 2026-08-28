@@ -49,6 +49,13 @@ export const weeklyPlans:Record<number,DayPlan>={
 0:{key:'rest',label:'Rest',kind:'rest',duration:'Rest',description:'Full rest. Walking is fine.'}
 };
 
+export const dateOverrides:Record<string,DayPlan>={
+'2026-08-28':{key:'launch',label:'Target walk + apartment reset',kind:'recovery',duration:'No gym',description:'Pick up goggles, work, dishes/cleaning, call super. No running. Normal walking counts.'},
+'2026-08-29':{key:'A',label:'Strength A',kind:'strength',duration:'55–70 min',description:'First formal strength day back. Conservative loads; skill work first.',exercises:strengthA,mobility:['Hip 90/90','Ankle knee-to-wall','Chin tucks']},
+'2026-08-30':{key:'recovery',label:'Recovery + mobility',kind:'recovery',duration:'10–15 min optional',description:'Normal walking plus optional hip/ankle/neck and split work.',mobility:['90/90','Ankle/calf','Neck/upper back','Split practice']},
+'2026-08-31':{key:'cardio',label:'Easy cardio + mobility',kind:'cardio',duration:'20–30 min optional',description:'Low impact and easy. Normal NYC walking can count. No sprints.',cardio:'20–30 min easy bike, elliptical, or incline walk',mobility:['Hips','Ankle/calf','Neck/upper back']}
+};
+
 export const runStages=[
 '2 min easy run / 2 min walk × 5',
 '3 min run / 2 min walk × 5',
@@ -73,5 +80,5 @@ export const trainingBlocks=[
 ];
 
 export function localDateKey(d=new Date()){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
-export function planForDate(d=new Date()){return weeklyPlans[d.getDay()]}
+export function planForDate(d=new Date()){const key=localDateKey(d);const block=blockForDate(key);if(dateOverrides[key])return dateOverrides[key];if(block&&(block.name.includes('Recovery')||block.name.includes('Deload')||block.name.includes('India')))return {key:'recovery-block',label:block.name,kind:'recovery',duration:'Flexible',description:block.focus,mobility:['Walking','10–15 min mobility','Optional short bodyweight session']};return weeklyPlans[d.getDay()]}
 export function blockForDate(key=localDateKey()){return trainingBlocks.find(b=>key>=b.start&&key<=b.end)??null}
