@@ -23,7 +23,7 @@ export default function ProgressPage(){
   async function remove(row:ProgressRow){if(!window.confirm(`Delete progress check-in from ${row.measuredOn}?`))return;setError(null);const r=await fetch('/api/tracker',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:row.id})});if(!r.ok){const j=await r.json().catch(()=>null);setError(j?.error||`Delete failed (${r.status})`);return}await load();if(editingId===row.id)cancelEdit()}
 
   return <main className="shell">
-    <header><div><p className="eyebrow">CADENCE</p><h1>Progress</h1><p className="subtle">A long-view scoreboard, not something to obsess over every day.</p></div></header>
+    <header><div><p className="eyebrow">SADHANA</p><h1>Progress</h1><p className="subtle">A long-view scoreboard, not something to obsess over every day.</p></div></header>
     {error&&<section className="card errorCard"><p>{error}</p></section>}
     <section className="card"><p className="eyebrow">CURRENT SNAPSHOT</p><div className="metrics"><div><strong>Push-ups</strong><span>{latest?.pushups ?? '—'} floor reps</span></div><div><strong>Pull-up</strong><span>{latest?.pullups ?? 0} unassisted · {latest?.pullupAssistanceLb??'—'} lb assist</span></div><div><strong>Mile</strong><span>{mileLabel(latest?.mileSeconds??null)}</span></div><div><strong>Split</strong><span>{latest?.splitDistanceIn??'—'} in away</span></div></div></section>
 
