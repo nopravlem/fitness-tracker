@@ -46,7 +46,7 @@ export default function Home(){
   function editSet(ei:number,si:number,field:keyof SetLog,value:string){setSaved(false);setLog(p=>{const n=structuredClone(p);n.exercises[ei].sets[si][field]=value;return n})}
 
   return <main className="shell">
-    <header className="appHeader"><div><p className="eyebrow">6 MONTH PROJECT</p><h1>Cadence</h1><span className="dayPill">Day {projectDay}</span>{block&&<p className="subtle">{block.name} · {block.focus}</p>}</div><button className={`menuButton ${menuOpen?'open':''}`} aria-label={menuOpen?'Close menu':'Open menu'} aria-expanded={menuOpen} onClick={()=>setMenuOpen(v=>!v)}><span/><span/><span/></button></header>
+    <header className="appHeader"><div><p className="eyebrow">6 MONTH PROJECT</p><h1>Sadhana</h1><span className="dayPill">Day {projectDay}</span>{block&&<p className="subtle">{block.name} · {block.focus}</p>}</div><button className={`menuButton ${menuOpen?'open':''}`} aria-label={menuOpen?'Close menu':'Open menu'} aria-expanded={menuOpen} onClick={()=>setMenuOpen(v=>!v)}><span/><span/><span/></button></header>
 
     <div className={`mobileMenu ${menuOpen?'open':''}`} aria-hidden={!menuOpen}>
       <div className="mobileMenuInner"><p className="eyebrow">MENU</p><Link href="/progress" onClick={()=>setMenuOpen(false)}>Progress <span>→</span></Link></div>
