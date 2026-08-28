@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { blockForDate, dateOverrides, trainingBlocks, weeklyPlans } from '@/lib/program';
+import { blockForDate, dateOverrides, PROGRAM_START, trainingBlocks, weeklyPlans } from '@/lib/program';
 
 const months=[
   {year:2026,month:7,label:'August 2026'},
@@ -26,19 +26,21 @@ function shortLabel(label:string){
 
 export default function PlanCalendarPage(){
   return <main className="shell calendarShell">
-    <header><div><p className="eyebrow">6 MONTH PROJECT</p><h1>Calendar.</h1><p className="subtle">What each day is supposed to be — including the breaks.</p></div></header>
+    <header><div><p className="eyebrow">6 MONTH PROJECT</p><h1>Calendar.</h1><p className="subtle">Day 1 starts on {PROGRAM_START}. Earlier dates are intentionally outside the plan.</p></div></header>
 
     <section className="card calendarLegend"><p className="eyebrow">KEY</p><div className="legendItems"><span data-kind="strength">Strength</span><span data-kind="cardio">Cardio</span><span data-kind="solidcore">Solidcore</span><span data-kind="recovery">Recovery / travel</span><span data-kind="rest">Rest</span></div></section>
 
     {months.map(({year,month,label})=>{
       const firstWeekday=new Date(Date.UTC(year,month,1)).getUTCDay();
       const daysInMonth=new Date(Date.UTC(year,month+1,0)).getUTCDate();
-      const cells:Array<null|{day:number;key:string;label:string;kind:string;block:string|null}>=Array(firstWeekday).fill(null);
+      const cells:Array<null|{day:number;key:string;label?:string;kind?:string;block?:string|null;beforeStart?:boolean}>=Array(firstWeekday).fill(null);
       for(let day=1;day<=daysInMonth;day++){
-        const key=keyFor(year,month,day);const weekday=new Date(Date.UTC(year,month,day)).getUTCDay();const plan=planForKey(key,weekday);const block=blockForDate(key);
+        const key=keyFor(year,month,day);
+        if(key<PROGRAM_START){cells.push({day,key,beforeStart:true});continue;}
+        const weekday=new Date(Date.UTC(year,month,day)).getUTCDay();const plan=planForKey(key,weekday);const block=blockForDate(key);
         cells.push({day,key,label:shortLabel(plan.label),kind:plan.kind,block:block?.name??null});
       }
-      return <section className="card monthCard" key={label}><div className="monthHead"><h2>{label}</h2>{trainingBlocks.filter(b=>b.start<=keyFor(year,month,daysInMonth)&&b.end>=keyFor(year,month,1)).map(b=><span key={b.name}>{b.name}</span>)}</div><div className="calendarWeekdays">{['S','M','T','W','T','F','S'].map((d,i)=><b key={`${d}-${i}`}>{d}</b>)}</div><div className="calendarGrid">{cells.map((cell,i)=>cell?<div className="calendarDay" data-kind={cell.kind} key={cell.key}><span>{cell.day}</span><strong>{cell.label}</strong>{cell.block&&<small>{cell.block}</small>}</div>:<div className="calendarDay empty" key={`empty-${i}`}/>)}</div></section>
+      return <section className="card monthCard" key={label}><div className="monthHead"><h2>{label}</h2>{trainingBlocks.filter(b=>b.start<=keyFor(year,month,daysInMonth)&&b.end>=keyFor(year,month,1)).map(b=><span key={b.name}>{b.name}</span>)}</div><div className="calendarWeekdays">{['S','M','T','W','T','F','S'].map((d,i)=><b key={`${d}-${i}`}>{d}</b>)}</div><div className="calendarGrid">{cells.map((cell,i)=>!cell?<div className="calendarDay empty" key={`empty-${i}`}/>:cell.beforeStart?<div className="calendarDay beforeStart" key={cell.key}><span>{cell.day}</span></div>:<div className="calendarDay" data-kind={cell.kind} key={cell.key}><span>{cell.day}</span><strong>{cell.label}</strong>{cell.block&&<small>{cell.block}</small>}</div>)}</div></section>
     })}
 
     <section className="card"><p className="eyebrow">BREAKS ARE PART OF THE PLAN</p><h2>No catching up afterward.</h2><p className="subtle">Travel, Thanksgiving, and the holiday period are intentionally lighter. When the normal program resumes, it resumes from there — no doubled workouts to repay a missed week.</p></section>
