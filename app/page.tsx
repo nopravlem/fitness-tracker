@@ -32,6 +32,7 @@ export default function Home(){
   const[cardio,setCardio]=useState({activity:'Run / walk',durationMinutes:'',distanceMiles:'',painDuring:'0',painAfter:'0',nextDayPain:'0',notes:''});
   const[progress,setProgress]=useState({weightLb:'',waistIn:'',pushups:'',pullupAssistanceLb:'',pullups:'',mileSeconds:'',splitDistanceIn:'',notes:''});
 
+  useEffect(()=>{document.body.classList.toggle('menuOpen',menuOpen);return()=>document.body.classList.remove('menuOpen')},[menuOpen]);
   useEffect(()=>{Promise.all([
     fetch('/api/workouts/today').then(async r=>{if(!r.ok){const j=await r.json().catch(()=>null);throw new Error(j?.error||`Workout load failed (${r.status})`)}return r.json()}),
     fetch('/api/tracker').then(async r=>{if(!r.ok){const j=await r.json().catch(()=>null);throw new Error(j?.error||`Tracker load failed (${r.status})`)}return r.json()})
@@ -45,7 +46,12 @@ export default function Home(){
   function editSet(ei:number,si:number,field:keyof SetLog,value:string){setSaved(false);setLog(p=>{const n=structuredClone(p);n.exercises[ei].sets[si][field]=value;return n})}
 
   return <main className="shell">
-    <header className="appHeader"><div><p className="eyebrow">6 MONTH PROJECT</p><h1>Cadence</h1><p className="dayLabel">Day {projectDay}</p>{block&&<p className="subtle">{block.name} · {block.focus}</p>}</div><div className="menuWrap"><button className={`menuButton ${menuOpen?'open':''}`} aria-label="Open menu" aria-expanded={menuOpen} onClick={()=>setMenuOpen(v=>!v)}><span/><span/><span/></button>{menuOpen&&<div className="menuPanel"><Link href="/progress" onClick={()=>setMenuOpen(false)}>Progress</Link></div>}</div></header>
+    <header className="appHeader"><div><p className="eyebrow">6 MONTH PROJECT</p><h1>Cadence</h1><span className="dayPill">Day {projectDay}</span>{block&&<p className="subtle">{block.name} · {block.focus}</p>}</div><button className={`menuButton ${menuOpen?'open':''}`} aria-label={menuOpen?'Close menu':'Open menu'} aria-expanded={menuOpen} onClick={()=>setMenuOpen(v=>!v)}><span/><span/><span/></button></header>
+
+    <div className={`mobileMenu ${menuOpen?'open':''}`} aria-hidden={!menuOpen}>
+      <div className="mobileMenuInner"><p className="eyebrow">MENU</p><Link href="/progress" onClick={()=>setMenuOpen(false)}>Progress <span>→</span></Link></div>
+    </div>
+
     {dbError&&<section className="card errorCard"><p className="eyebrow">DATABASE SYNC ERROR</p><p>{dbError}</p></section>}{notice&&<section className="card successCard"><b>{notice}</b></section>}
 
     <section className="hero card"><p className="eyebrow">TODAY · {todayPlan.label.toUpperCase()}</p><h2>{todayPlan.description}</h2><p>{todayPlan.duration}{todayPlan.cardio?` · ${todayPlan.cardio}`:''}</p></section>
