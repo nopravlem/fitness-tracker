@@ -20,6 +20,7 @@ export default function TodayPractice({todayKey,plan,workoutDone}:{todayKey:stri
     if(weekday>=1&&weekday<=5)result.push({id:'wake-630',label:'6:30 wake',detail:'Try again next weekday if it does not happen. Never carries over.'});
     if(['strength','cardio','solidcore'].includes(plan.kind))result.push({id:'training',label:plan.label,detail:'The planned training for today.',automatic:plan.kind==='strength'});
     if(plan.mobility?.length)result.push({id:'mobility',label:'Mobility',detail:plan.kind==='recovery'?'Optional recovery work counts.':'Short and useful is enough.'});
+    result.push({id:'protein-forward',label:'Protein-forward meals',detail:'Good enough counts. No meal-by-meal logging.'});
     return result;
   },[todayKey,plan]);
   const[state,setState]=useState<PracticeState>({done:{},sideways:false});
