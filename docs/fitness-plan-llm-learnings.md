@@ -178,4 +178,41 @@ interface NutritionDefaults {
 }
 ```
 
+## 11. A dynamic plan must respond to what actually happened
+
+A calendar that advances as though every planned action happened perfectly creates hidden “plan debt.” Missing one day can make the next day feel like the user is already behind even when they intellectually know that missing a day is okay.
+
+The planner should treat planned actions and completed actions as separate state.
+
+Rules:
+
+- A missed action does **not** automatically roll forward.
+- Every planned action should eventually have a carryover policy such as `never`, `if_still_relevant`, `reschedule`, or `planner_decides`.
+- Routine actions such as a target wake time or optional mobility normally use `never`: try again on the next relevant day rather than creating debt.
+- Errands or prerequisites can use `if_still_relevant`.
+- Training sessions should generally use `planner_decides`: the planner may move, replace, modify, or drop the session based on the rest of the week and current recovery.
+- Rest/recovery missed or spent differently is not something to “make up.”
+- The planner should explicitly communicate when a new day is a clean re-entry point.
+
+Daily completion UI should be intentionally low friction. One-tap state is preferred; rich postmortems are not required. A lightweight “day went sideways” signal can provide context without forcing the user to explain every unchecked item.
+
+The goal is not to maximize checkbox completion. The goal is to capture enough reality for the next plan decision to be better.
+
+## 12. Wearables are context, not the product
+
+Wearable integrations should primarily reduce manual input and improve planning decisions. They should not turn the app into a generic health-metrics dashboard.
+
+Potential useful signals include:
+
+- sleep duration
+- steps/general activity
+- detected workouts
+- resting heart rate
+- HRV/recovery signals when reliable and available
+- heart-rate data relevant to cardio progression
+
+Estimated calories burned should not be a primary planning signal.
+
+The integration layer should normalize external signals so the planner is not tightly coupled to one provider. Initial device interest includes COROS, with Apple Watch, Garmin, and WHOOP as future targets.
+
 The central lesson is: **the LLM can generate a rich plan without making the user interact with a rich form every day.** The product should surface only what helps on that particular day.
