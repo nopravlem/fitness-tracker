@@ -27,14 +27,14 @@ export default function TodayPractice({todayKey,plan,workoutDone}:{todayKey:stri
 
   useEffect(()=>{setState(readState(todayKey));setReady(true)},[todayKey]);
   useEffect(()=>{if(!ready)return;window.localStorage.setItem(storageKey(todayKey),JSON.stringify(state))},[state,todayKey,ready]);
-  useEffect(()=>{if(workoutDone&&items.some(i=>i.id==='training'))setState(s=>s.done.training? s:{...s,done:{...s.done,training:true}})},[workoutDone,items]);
+  useEffect(()=>{if(workoutDone&&items.some(i=>i.id==='training'))setState(s=>s.done.training?s:{...s,done:{...s.done,training:true}})},[workoutDone,items]);
 
-  if(!items.length)return null;
   function toggle(id:string){setState(s=>({...s,done:{...s.done,[id]:!s.done[id]}}))}
+  const completed=items.filter(i=>state.done[i.id]).length;
   return <section className={`card ${styles.practice}`}>
-    <div className={styles.heading}><div><p className="eyebrow">TODAY'S PRACTICE</p><h2>What actually happened?</h2></div><span>{items.filter(i=>state.done[i.id]).length}/{items.length}</span></div>
-    <p className={styles.intro}>One tap. No streaks, no make-up debt. Unfinished things do not automatically become tomorrow's problem.</p>
-    <div className={styles.items}>{items.map(item=><button key={item.id} type="button" className={`${styles.item} ${state.done[item.id]?styles.done:''}`} onClick={()=>toggle(item.id)} aria-pressed={!!state.done[item.id]}><span className={styles.check}>{state.done[item.id]?'✓':''}</span><span><b>{item.label}</b>{item.detail&&<small>{item.detail}</small>}</span></button>)}</div>
+    <div className={styles.heading}><div><p className="eyebrow">TODAY'S PRACTICE</p><h2>What actually happened?</h2></div>{items.length>0&&<span>{completed}/{items.length}</span>}</div>
+    <p className={styles.intro}>{items.length>0?'One tap. No streaks, no make-up debt. Unfinished things do not automatically become tomorrow’s problem.':'Nothing needs checking off today. Rest is already part of the plan — but you can still flag that the day went differently than expected.'}</p>
+    {items.length>0&&<div className={styles.items}>{items.map(item=><button key={item.id} type="button" className={`${styles.item} ${state.done[item.id]?styles.done:''}`} onClick={()=>toggle(item.id)} aria-pressed={!!state.done[item.id]}><span className={styles.check}>{state.done[item.id]?'✓':''}</span><span><b>{item.label}</b>{item.detail&&<small>{item.detail}</small>}</span></button>)}</div>}
     <button type="button" className={`${styles.sideways} ${state.sideways?styles.sidewaysActive:''}`} onClick={()=>setState(s=>({...s,sideways:!s.sideways}))}>{state.sideways?'✓ Day went sideways':'Day went sideways?'}</button>
     {state.sideways&&<p className={styles.context}>Noted. Today is information, not debt. Nothing extra gets stacked onto tomorrow just because today was messy.</p>}
   </section>
