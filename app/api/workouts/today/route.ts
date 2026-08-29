@@ -48,7 +48,8 @@ export async function PUT(request: Request) {
     await db.delete(workoutSets).where(eq(workoutSets.sessionId, session.id));
     for (const ex of body.exercises) {
       const [exercise] = await db.insert(exercises).values({ name: ex.name }).onConflictDoUpdate({ target: exercises.name, set: { name: ex.name } }).returning();
-      const sets = ex.sets.filter(s => s.weight || s.reps).map((s, i) => ({ sessionId: session.id, exerciseId: exercise.id, setNumber: i + 1, weight: s.weight || null, reps: s.reps ? Number(s.reps) : null }));
+      const sets = ex.sets.map((s, i) => ({ sessionId: session.id, exerciseId: exercise.id, setNumber: i + 1, weight: s.weight || null, reps: s.reps ? Number(s.reps) : null }))
+        .filter(s => s.weight || s.reps !== null);
       if (sets.length) await db.insert(workoutSets).values(sets);
     }
     return NextResponse.json({ ok: true, sessionId: session.id });
