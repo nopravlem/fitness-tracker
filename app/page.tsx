@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { blockForDate, localDateKey, planForDate, PROGRAM_START } from '@/lib/program';
+import TodayPractice from './components/TodayPractice';
 
 type SetLog={weight:string;reps:string};
 type Exercise={name:string;target:string;note?:string;sets:SetLog[]};
@@ -19,7 +20,7 @@ function foodPlanForDate(d=new Date()){
   return {
     breakfast:'Protein drink + fruit + bagel or toast',
     lunch:office?'Forkable: choose a meal with a clear protein + carb + vegetable. No optimizing beyond that.':'Choose one: Greek yogurt + fruit + granola + protein drink; microwave rice + fully cooked chicken + bagged salad; or order a chicken, steak, or tofu bowl.',
-    dinner:'Pick one default: chicken/rice/veg, Mediterranean chicken + rice/pita/salad/hummus, sushi + edamame, Indian chicken + rice + veg, steak + potato/rice + veg, salmon + rice + veg, or tofu + rice + veg.',
+    dinner:'Pick one default: chicken/rice/veg, Mediterranean chicken + rice/pita/salad/hummus, sushi + edamame, Indian chicken + rice + veg, steak + potato/rice+veg, salmon/rice/veg, or tofu/rice/veg.',
     emergency:'Too tired to decide: protein drink + fruit now, then order one of the defaults above. Taco Bell is allowed on purpose — it is not a failed day.',
     note:'Aim roughly for 1,600–1,700 calories on average and ~100g protein. You do not need to log every meal here.'
   };
@@ -49,12 +50,13 @@ export default function Home(){
     <header className="appHeader"><div><p className="eyebrow">SIX MONTH PRACTICE</p><h1>Sadhana</h1><span className="dayPill">Day {projectDay}</span>{block&&<p className="subtle">{block.name} · {block.focus}</p>}</div><button className={`menuButton ${menuOpen?'open':''}`} aria-label={menuOpen?'Close menu':'Open menu'} aria-expanded={menuOpen} onClick={()=>setMenuOpen(v=>!v)}><span/><span/><span/></button></header>
 
     <div className={`mobileMenu ${menuOpen?'open':''}`} aria-hidden={!menuOpen}>
-      <div className="mobileMenuInner"><p className="eyebrow">MENU</p><Link href="/progress" onClick={()=>setMenuOpen(false)}>Progress <span>→</span></Link><Link href="/about" onClick={()=>setMenuOpen(false)}>About <span>→</span></Link></div>
+      <div className="mobileMenuInner"><p className="eyebrow">MENU</p><Link href="/progress" onClick={()=>setMenuOpen(false)}>Progress <span>→</span></Link><Link href="/wearables" onClick={()=>setMenuOpen(false)}>Wearables <span>→</span></Link><Link href="/about" onClick={()=>setMenuOpen(false)}>About <span>→</span></Link></div>
     </div>
 
     {dbError&&<section className="card errorCard"><p className="eyebrow">DATABASE SYNC ERROR</p><p>{dbError}</p></section>}{notice&&<section className="card successCard"><b>{notice}</b></section>}
 
     <section className="hero card"><p className="eyebrow">TODAY · {todayPlan.label.toUpperCase()}</p><h2>{todayPlan.description}</h2><p>{todayPlan.duration}{todayPlan.cardio?` · ${todayPlan.cardio}`:''}</p></section>
+    <TodayPractice todayKey={todayKey} plan={todayPlan} workoutDone={saved}/>
 
     <div className="sectionTitle"><h2>Food today</h2><span>Decisions already made</span></div>
     <section className="card foodPlan"><div><b>Breakfast</b><p>{food.breakfast}</p></div><div><b>Lunch</b><p>{food.lunch}</p></div><div><b>Dinner</b><p>{food.dinner}</p></div><div className="foodEmergency"><b>If work fried your brain</b><p>{food.emergency}</p></div><p className="note">{food.note}</p></section>
