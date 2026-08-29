@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Six Month Strong',
-  description: 'A mobile-first fitness progression tracker',
+  title: 'Sadhana',
+  description: 'A mobile-first adaptive fitness and lifestyle progression planner',
   manifest: '/manifest.webmanifest',
 };
 
