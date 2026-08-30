@@ -15,6 +15,13 @@
       "when": 1788048780000,
       "tag": "0001_daily_practice",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788051000000,
+      "tag": "0002_workout_context",
+      "breakpoints": true
     }
   ]
 }
