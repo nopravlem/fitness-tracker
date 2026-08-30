@@ -18,10 +18,13 @@ Rules:
 
 - Actual booked dates override the default weekly template.
 - If a class is not booked on the default class day, do not invent one.
-- If the user books a class on a strength/cardio day, the planner should decide whether it replaces, moves, or modifies that session rather than blindly stacking both.
-- Future generated plans should support calendar overrides as first-class data.
+- **Workout classes are swaps, not replacements, by default.** When a booked class lands on a day that already had a planned session, the class should usually take that day’s slot and the displaced session should move to the normal class day or another sensible open training slot in the same week.
+- A class should not silently erase a planned session from the week or create an accidental extra recovery/rest day unless the planner intentionally reduces volume for recovery, travel, symptoms, or another explicit reason.
+- Do not stack the class and displaced workout on the same day merely to preserve volume.
+- If a user explicitly wants the class to replace or supplement a workout, follow that preference instead of forcing a swap.
+- Future generated plans should support calendar overrides and session swaps as first-class data.
 
-Example from the reference plan: Solidcore is 4 classes/month and September bookings fall on different weekdays, so the plan must follow those dates rather than assuming Wednesday.
+Example from the reference plan: Solidcore is 4 classes/month and September bookings fall on different weekdays. The plan follows those actual dates, and when Solidcore is booked off the default Wednesday slot, the workout it displaces is moved to Wednesday so the intended weekly training rhythm remains intact.
 
 ## 2. Progress check-ins should be periodic, not daily
 
