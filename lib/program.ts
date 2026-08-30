@@ -1,4 +1,4 @@
-export type ProgramExercise={name:string;target:string;note?:string;sets:number;defaultWeight?:string};
+export type ProgramExercise={name:string;target:string;note?:string;sets:number;defaultWeight?:string;unilateral?:boolean};
 export type DayPlan={key:string;label:string;kind:'strength'|'cardio'|'solidcore'|'recovery'|'rest';duration:string;description:string;exercises?:ProgramExercise[];mobility?:string[];cardio?:string};
 
 export const PROGRAM_START='2026-08-28';
@@ -10,7 +10,7 @@ export const strengthA:ProgramExercise[]=[
 {name:'Lat Pulldown',target:'3 × 8–12',note:'Recalibrate around ~70 lb; add reps before load.',sets:3},
 {name:'Goblet Squat / Leg Press',target:'3 × 8–12',note:'Controlled knees; do not snap into hyperextension.',sets:3},
 {name:'DB Overhead Press',target:'3 × 6–10',note:'Reference load: 17.5 lb each hand.',sets:3,defaultWeight:'17.5'},
-{name:'Single-leg RDL',target:'3 × 8 / side',note:'Reference load: 15–20 lb.',sets:3},
+{name:'Single-leg RDL',target:'3 × 8 / side',note:'Reference load: 15–20 lb.',sets:3,unilateral:true},
 {name:'Hip Thrust / Glute Bridge',target:'3 × 8–12',note:'Recalibrate. Historical reference ~100 lb; glute bridge is fine when setup is annoying.',sets:3},
 {name:'Cable Crunch',target:'3 × 10–15',sets:3},
 {name:'Dead Bug',target:'3 × 8 / side',sets:3,defaultWeight:'BW'}
