@@ -19,9 +19,11 @@ const aliases:Record<string,string>={
   'Ankle knee-to-wall':'ankle-knee-to-wall','Ankle/calf':'ankle-calf',
   'Chin tucks':'chin-tucks','Neck + thoracic':'neck-upper-back','Neck/upper back':'neck-upper-back',
   'Hip flexor':'hip-flexor','Adductor rock-backs':'adductor-rock-backs','Adductors':'adductor-rock-backs',
-  'Split practice':'split-practice','Optional split practice':'split-practice','Hamstring':'split-practice',
-  'Walking':'neck-upper-back','10–15 min mobility':'hip-90-90','Optional short bodyweight session':'assisted-pull-ups',
-  'Optional short mobility only if it feels good':'neck-upper-back'
+  'Split practice':'split-practice','Optional split practice':'split-practice','Hamstring':'split-practice'
 };
 
-export function exerciseReferenceHref(label:string){const id=aliases[label]||exerciseReferences.find(x=>x.name===label)?.id;return id?`/exercises#${id}`:'/exercises'}
+const sectionAliases:Record<string,'mobility'|'strength'>={
+  'Walking':'mobility','10–15 min mobility':'mobility','Optional short mobility only if it feels good':'mobility','Optional short bodyweight session':'strength'
+};
+
+export function exerciseReferenceHref(label:string){const section=sectionAliases[label];if(section)return `/exercises#${section}`;const id=aliases[label]||exerciseReferences.find(x=>x.name===label)?.id;return id?`/exercises#${id}`:'/exercises'}
