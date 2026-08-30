@@ -135,8 +135,12 @@ The user should be able to:
 - add a historical check-in
 - edit an incorrect check-in
 - delete a check-in
+- edit a historical workout when the original entry was partial or incorrect
+- delete a workout that should not exist
 
 This matters for future LLM adaptation: the model should consume corrected history rather than treating accidental or duplicate records as truth.
+
+Daily-practice state is different: for now it is one date-keyed snapshot that can be changed during that day, then treated as closed context rather than a historical form to rewrite later.
 
 ## 9. UX principle: avoid unnecessary nesting and clutter
 
@@ -214,5 +218,38 @@ Potential useful signals include:
 Estimated calories burned should not be a primary planning signal.
 
 The integration layer should normalize external signals so the planner is not tightly coupled to one provider. Initial device interest includes COROS, with Apple Watch, Garmin, and WHOOP as future targets.
+
+## 13. Preserve progression while introducing occasional novelty
+
+Repeated exposure is necessary for measurable strength and skill progression, but a long plan should not become mechanically identical forever.
+
+Default rule: when training is reasonably stable, introduce **about one new exercise or movement variation every 6–8 weeks**. The intent is exploration and renewed engagement, not program hopping.
+
+Rules:
+
+- Do not replace several core lifts at once.
+- Keep goal-critical movements stable long enough to evaluate progress.
+- Prefer introducing one low-risk accessory, core movement, machine, cable movement, or variation at a time.
+- A new movement can replace a similar accessory or occupy a small exploratory slot rather than simply adding more volume.
+- Do not force novelty during disrupted travel/re-entry weeks or when the user is still struggling to establish the existing routine.
+- If the user strongly likes or dislikes a new movement, that feedback should influence future exercise selection.
+
+The planner should optimize for both **progression and curiosity**.
+
+## 14. Physical limitations should be first-class planning context
+
+A workout can be partial for legitimate physical reasons: cramping, grip fatigue, joint pain, an irritated area, unexpected soreness, or another limitation that appears during the session. This is especially likely during re-entry after time away from training.
+
+The product should capture a lightweight signal such as `trainingLimited` plus an optional note rather than forcing the user to classify every event as an injury.
+
+Rules:
+
+- A limited or adapted session can still count as practicing/training; it should not automatically be classified as failure.
+- The planner should distinguish `not attempted`, `stopped because life intervened`, and `stopped/modified because of a physical limitation` when that information is available.
+- Do not automatically reschedule unfinished sets as debt.
+- A limitation should affect the next relevant plan only when it is still relevant or meaningful.
+- Repeated limitations involving the same movement/body area deserve more weight than one isolated event.
+- The planner may reduce load/volume, swap an exercise, change grip/setup, choose a less demanding variation, or recommend recovery depending on context.
+- Unilateral exercises should have explicit left/right logging metadata instead of assuming one reps value accurately represents both sides.
 
 The central lesson is: **the LLM can generate a rich plan without making the user interact with a rich form every day.** The product should surface only what helps on that particular day.
