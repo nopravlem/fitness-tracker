@@ -6,6 +6,20 @@ Recommended startup prompt:
 
 > Read `docs/project-context.md`, `docs/fitness-plan-intake.md`, and `docs/fitness-plan-llm-learnings.md`, then inspect the current `main` branch and recent open PRs before making changes.
 
+## Development workflow: PRs only
+
+**Never commit or push changes directly to `main`.** All code, documentation, configuration, migration, and other repository changes must be made on a separate branch and submitted through a pull request for review.
+
+Rules:
+
+- Treat `main` as protected, even if repository permissions technically allow direct writes.
+- Before making any change, create or use a dedicated branch from the current `main`.
+- Commit changes only to that branch.
+- Open a pull request targeting `main` and leave merging to the user unless explicitly asked to merge.
+- Do not bypass the PR workflow for “small,” “obvious,” documentation-only, or corrective changes.
+
+This workflow is a standing project requirement and applies to every development session.
+
 This file is intentionally concise. It captures the product philosophy, architectural direction, UX rules, and major decisions that are easy to lose when starting a fresh chat. The more detailed fitness-planning rules live in the two planner docs above.
 
 ## Product identity
