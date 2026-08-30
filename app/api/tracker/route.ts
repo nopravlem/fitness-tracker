@@ -7,6 +7,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const today=()=>new Date().toISOString().slice(0,10);
+const requestDate=(request:Request)=>new URL(request.url).searchParams.get('date')||today();
 const nullableNumber=(value:unknown)=>value===null||value===undefined||value===''?null:Number(value);
 const nullableStringNumber=(value:unknown)=>value===null||value===undefined||value===''?null:String(value);
 const progressValues=(body:any)=>({
@@ -21,10 +22,10 @@ const progressValues=(body:any)=>({
   notes:body.notes||null
 });
 
-export async function GET(){
+export async function GET(request:Request){
   try{
     const db=getDb();
-    const date=today();
+    const date=requestDate(request);
     const [checkin]=await db.select().from(dailyCheckins).where(eq(dailyCheckins.checkinDate,date)).limit(1);
     const cardio=await db.select().from(cardioSessions).orderBy(desc(cardioSessions.performedOn),desc(cardioSessions.id)).limit(12);
     const mobility=await db.select().from(mobilitySessions).orderBy(desc(mobilitySessions.performedOn),desc(mobilitySessions.id)).limit(12);
@@ -40,7 +41,27 @@ export async function POST(request:Request){
   try{
     const db=getDb();
     const body=await request.json();
-    const date=today();
+    const date=body.date||today();
+    if(body.type==='practice'){
+      const [row]=await db.insert(dailyCheckins).values({
+        checkinDate:date,
+        wake630Met:body.wake630Met??null,
+        trainingDone:body.trainingDone??null,
+        mobilityDone:body.mobilityDone??null,
+        practiceSideways:!!body.practiceSideways,
+        proteinTargetMet:body.proteinTargetMet??null
+      }).onConflictDoUpdate({
+        target:dailyCheckins.checkinDate,
+        set:{
+          wake630Met:body.wake630Met??null,
+          trainingDone:body.trainingDone??null,
+          mobilityDone:body.mobilityDone??null,
+          practiceSideways:!!body.practiceSideways,
+          proteinTargetMet:body.proteinTargetMet??null
+        }
+      }).returning();
+      return NextResponse.json({ok:true,row});
+    }
     if(body.type==='checkin'){
       const [row]=await db.insert(dailyCheckins).values({checkinDate:date,proteinTargetMet:body.protein??null,calorieRangeMet:body.calories??null,hydrationTargetMet:body.hydration??null,energy:body.energy??null,sleepHours:body.sleepHours?String(body.sleepHours):null,notes:body.notes||null})
         .onConflictDoUpdate({target:dailyCheckins.checkinDate,set:{proteinTargetMet:body.protein??null,calorieRangeMet:body.calories??null,hydrationTargetMet:body.hydration??null,energy:body.energy??null,sleepHours:body.sleepHours?String(body.sleepHours):null,notes:body.notes||null}}).returning();
