@@ -66,7 +66,7 @@ The Today screen is the operational center of the product.
 
 It should show only what helps the user act today. Rich planner output should **not** turn into rich forms everywhere.
 
-Current lightweight reality-capture experiment:
+Current lightweight reality capture:
 
 - `Today’s practice` appears under the Today hero.
 - It uses a few one-tap checkoffs, not a giant habit list.
@@ -74,7 +74,8 @@ Current lightweight reality-capture experiment:
 - `Day went sideways?` captures context without requiring a postmortem.
 - No streaks.
 - No make-up debt.
-- Practice state is currently stored in `localStorage` on purpose so the interaction remains disposable while it is being tested.
+- Today Practice is persisted server-side in the date-unique `daily_checkins` record.
+- There is one practice record per date. The current day is editable; historical practice editing is intentionally not exposed for now.
 
 If the checkoffs become annoying, guilt-inducing, or redundant, simplify or remove them. The product goal is reality capture, not checkbox completion.
 
@@ -116,10 +117,24 @@ Bottom navigation:
 Hamburger menu currently includes supporting destinations such as:
 
 - Progress
+- Exercises
 - Wearables
 - About
 
 Do not create a new permanent tab for every feature. Contextual input is preferred over a generic “track everything” area.
+
+## Exercise reference library
+
+`/exercises` is the browse-all reference library for movements used in the plan. It should remain reference material, not another logging surface.
+
+Current UX rules:
+
+- Today mobility chips deep-link to the relevant `/exercises` entry or useful section.
+- Broad/composite references may describe a short sequence, while individual movements can have their own entries.
+- When a `How to do it` instruction mentions a movement with its own entry, link the movement words directly in the sentence instead of adding a separate related-links block.
+- Inline reference links use the surrounding text color for normal, visited, hover, and active states; the distinction is underline plus roughly `font-weight: 500`. Avoid default blue/purple browser link styling and unnecessary arrow icons.
+- Mobility cards use the body area as the small eyebrow (`HIP MOBILITY`, `NECK MOBILITY`) and the actual movement/reference name as the large title (`Hip 90/90`, `Neck/upper back`). Do not reverse this hierarchy.
+- Mobility chips must have enough row spacing on mobile that wrapped tags never overlap.
 
 ## Progress and tracking
 
@@ -131,9 +146,11 @@ Current rule:
 - weight and waist are optional
 - performance metrics matter more than frequent scale data
 
-History must support correction: add, edit, and delete historical entries.
+History must support correction: add, edit, and delete historical progress entries. Workout history lives under Progress and supports historical workout editing and deletion.
 
-Workout set logging belongs on strength days. Knee-response logging belongs on relevant cardio/run days. Other inputs should appear only when useful.
+Workout set logging belongs on strength days. Unilateral movements can store left/right reps separately. A workout can also record that something physically limited or adapted the session, with an optional note, so partial work has context instead of reading as unexplained failure.
+
+Knee-response logging belongs on relevant cardio/run days. Other inputs should appear only when useful.
 
 ## Nutrition direction
 
@@ -147,6 +164,8 @@ The current app uses defaults such as:
 - emergency decision-fatigue fallback
 - rough calorie/protein guardrails without requiring daily food logging
 
+When multiple lunch or dinner options are displayed, use a scannable bulleted list rather than a dense prose sentence. Mobile readability matters more than compressing the options into fewer lines.
+
 Avoid turning this into a calorie-tracking app unless the user explicitly wants that behavior.
 
 ## Dynamic planning rules
@@ -157,7 +176,11 @@ Scheduled classes are real calendar events, not weekday assumptions. Actual book
 
 A missed workout should not automatically get stacked onto the next day. The planner may move, replace, modify, or drop it depending on the rest of the week and current recovery.
 
+A physical limitation or adapted/partial workout is first-class context. Do not automatically turn unfinished sets into make-up debt. Repeated limitations should influence future exercise/load decisions more than one isolated event.
+
 The system should explicitly support re-entry after disrupted days or weeks.
+
+When training is stable, introduce roughly one new exercise or variation every 6–8 weeks without churning the goal-critical core movements.
 
 ## Current product / technical architecture
 
@@ -174,7 +197,9 @@ Stack:
 
 Current app is intentionally single-user with no auth yet. Add users/auth before multi-user exposure rather than prematurely complicating the current build.
 
-Core tracker data is persisted server-side in Postgres. The Today Practice experiment is an exception and currently uses browser `localStorage` by design.
+Core tracker data, workout history, and Today Practice are persisted server-side in Postgres.
+
+Workout reads/writes use an explicit client-local date rather than deriving the date from server UTC. Preserve this distinction when adding date-based behavior.
 
 Database migrations are checked into `drizzle/` and run through the repository’s migration workflow.
 
@@ -206,6 +231,8 @@ Good concepts:
 
 Avoid framing missed days as failure or encouraging compensatory behavior.
 
+Use plain-language labels instead of unexplained gym shorthand in user-facing UI. For example, bodyweight defaults are displayed as `bodyweight` rather than `BW`.
+
 ## Visual / UX direction
 
 Current visual palette is dark aubergine/plum with coral/dusty-rose accents.
@@ -218,6 +245,8 @@ Important established preferences:
 - fullscreen hamburger menu is opaque
 - preserve generous rounded styling for now; a broader design pass may happen later
 - do not make ad hoc global visual changes without considering the whole design system
+- lists of choices should be visually scannable rather than encoded as long prose
+- links embedded in reference prose should remain visually integrated with the surrounding text rather than taking on default browser colors
 
 ## Recently completed work
 
@@ -225,12 +254,18 @@ Recent merged work includes:
 
 - Sadhana rename and About page
 - progress CRUD and cleaner editor layout
+- workout history under Progress with historical edit/delete
 - native mobile date-input fixes
+- explicit client-local workout dates to avoid UTC rollover bugs
+- workout draft autosave and extra-set logging
+- training-limitation context and unilateral left/right reps
 - workout-feel scale changed to `1 = could do more`, `5 = wrecked`
 - header label changed to `SIX MONTH PRACTICE`
-- Today Practice experiment
+- database-backed Today Practice with one record per date
 - Wearables placeholder
 - dynamic-planning / no-debt rules added to planner learnings
+- `/exercises` reference library, hamburger navigation entry, and deep-linked mobility chips
+- mobile readability refinements for nutrition lists and mobility/reference links
 
 Always inspect current `main` and recent PRs before assuming this list is still exhaustive.
 

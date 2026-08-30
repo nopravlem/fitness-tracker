@@ -61,6 +61,8 @@ The planner should distinguish between:
 
 For the latter group, the goal is to pre-make decisions rather than ask them to repeatedly make “healthy choices” in the moment.
 
+When several food choices are shown in the UI, render them as a **scannable list** rather than a dense comma- or semicolon-separated paragraph. This applies especially to lunch and dinner defaults on mobile.
+
 ## 4. Plan output and logging UI are different concerns
 
 The LLM should generate enough structured detail to create a useful plan, but the app should **not expose every generated field as a daily input**.
@@ -251,5 +253,22 @@ Rules:
 - Repeated limitations involving the same movement/body area deserve more weight than one isolated event.
 - The planner may reduce load/volume, swap an exercise, change grip/setup, choose a less demanding variation, or recommend recovery depending on context.
 - Unilateral exercises should have explicit left/right logging metadata instead of assuming one reps value accurately represents both sides.
+
+## 15. Exercise references should be reachable from the plan without cluttering Today
+
+Mobility and exercise names can be unfamiliar even when the daily plan itself should remain compact. The preferred pattern is a dedicated **Exercises** reference library plus contextual deep links from Today.
+
+Rules:
+
+- Mobility chips on Today can deep-link to the relevant entry on `/exercises`.
+- The full Exercises library should also be reachable from the hamburger menu.
+- A broad/composite mobility item such as `Neck/upper back` can explain a short sequence, while specific movements within that sequence should have their own reference entries when useful.
+- If a composite instruction mentions a movement that has its own entry, link the **movement words directly inside “How to do it”** rather than adding a separate “See related movements” block.
+- Inline reference links should look like part of the prose: same text color in normal, visited, hover, and active states; underline; about `font-weight: 500`; no default browser blue/purple and no decorative arrow/icon.
+- Reference-card hierarchy should keep the **body-area/category in the small eyebrow** (`HIP MOBILITY`, `NECK MOBILITY`) and the **actual movement/reference name as the large title** (`Hip 90/90`, `Neck/upper back`). Do not invert those roles.
+- Broad tags should route to a useful specific reference or section rather than pretending every tag is a single exercise.
+- Wrapped mobility chips need enough row spacing to remain clearly separated on mobile.
+
+The exercise library is reference material, not another logging surface. It should answer “what is this and how do I do it?” without increasing daily input burden.
 
 The central lesson is: **the LLM can generate a rich plan without making the user interact with a rich form every day.** The product should surface only what helps on that particular day.
