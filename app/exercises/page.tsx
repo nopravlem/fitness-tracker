@@ -7,7 +7,7 @@ function renderStep(step:string,related?:{id:string;label:string}[]){
   if(!match)return step;
   const index=step.toLowerCase().indexOf(match.label.toLowerCase());
   const before=step.slice(0,index);const linked=step.slice(index,index+match.label.length);const after=step.slice(index+match.label.length);
-  return <>{before}<a href={`#${match.id}`} style={{color:'inherit',textDecoration:'underline',fontWeight:500,textUnderlineOffset:'2px'}}>{linked}</a>{after}</>;
+  return <>{before}<a className="inlineReferenceLink" href={`#${match.id}`}>{linked}</a>{after}</>;
 }
 
 export default function ExercisesPage(){
