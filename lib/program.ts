@@ -5,7 +5,7 @@ export const PROGRAM_START='2026-08-28';
 
 export const strengthA:ProgramExercise[]=[
 {name:'Assisted Pull-ups',target:'Skill · 10 min',note:'Assisted reps, scapular pull-ups, hangs, controlled negatives. Track assistance.',sets:4},
-{name:'Push-up Progression',target:'3 × 6–10',note:'Incline or wall. Lower the incline only after clean reps.',sets:3,defaultWeight:'BW'},
+{name:'Push-up Progression',target:'3 × 6–10',note:'Incline or wall. Lower the incline only after clean reps.',sets:3,defaultWeight:'Body weight'},
 {name:'Bench Press',target:'3 × 3–5',note:'Start at 45 lb. Build reps first; later work toward 3 × 6–8 before the smallest load increase.',sets:3,defaultWeight:'45'},
 {name:'Lat Pulldown',target:'3 × 8–12',note:'Recalibrate around ~70 lb; add reps before load.',sets:3},
 {name:'Goblet Squat / Leg Press',target:'3 × 8–12',note:'Controlled knees; do not snap into hyperextension.',sets:3},
@@ -13,19 +13,19 @@ export const strengthA:ProgramExercise[]=[
 {name:'Single-leg RDL',target:'3 × 8 / side',note:'Reference load: 15–20 lb.',sets:3,unilateral:true},
 {name:'Hip Thrust / Glute Bridge',target:'3 × 8–12',note:'Recalibrate. Historical reference ~100 lb; glute bridge is fine when setup is annoying.',sets:3},
 {name:'Cable Crunch',target:'3 × 10–15',sets:3},
-{name:'Dead Bug',target:'3 × 8 / side',sets:3,defaultWeight:'BW'}
+{name:'Dead Bug',target:'3 × 8 / side',sets:3,defaultWeight:'Body weight'}
 ];
 
 export const strengthB:ProgramExercise[]=[
 {name:'Assisted Pull-ups',target:'3 × 5–8',note:'Reduce assistance after all sets are clean at the top of the range.',sets:3},
-{name:'Push-up Progression',target:'3 × 6–10',sets:3,defaultWeight:'BW'},
+{name:'Push-up Progression',target:'3 × 6–10',sets:3,defaultWeight:'Body weight'},
 {name:'Bench Press',target:'3 × 3–5',note:'45 lb starting reference; progress reps before load.',sets:3,defaultWeight:'45'},
 {name:'Hip Thrust',target:'3 × 8–12',sets:3},
 {name:'Lat Pulldown',target:'3 × 8–12',sets:3},
 {name:'DB Overhead Press',target:'3 × 6–10',sets:3,defaultWeight:'17.5'},
 {name:'21s',target:'2 × 5-5-5',note:'20 lb bar. Progress 5-5-5 → 6-6-6 → 7-7-7, then add load.',sets:2,defaultWeight:'20'},
 {name:'Leg Press',target:'3 × 8–12',sets:3},
-{name:"Captain's Chair Knee Raise",target:'3 × 8–12',sets:3,defaultWeight:'BW'},
+{name:"Captain's Chair Knee Raise",target:'3 × 8–12',sets:3,defaultWeight:'Body weight'},
 {name:'Pallof Press',target:'3 × 10 / side',sets:3}
 ];
 
@@ -36,7 +36,7 @@ export const strengthC:ProgramExercise[]=[
 {name:'Bench Press',target:'3 × 3–5',note:'Later progress toward 3 × 5–8 if recovery is good.',sets:3,defaultWeight:'45'},
 {name:'Biceps Curl / 21s',target:'2 sets',sets:2},
 {name:'Triceps',target:'2 × 10–12',sets:2},
-{name:'Plank / Side Plank',target:'2–3 sets',sets:3,defaultWeight:'BW'}
+{name:'Plank / Side Plank',target:'2–3 sets',sets:3,defaultWeight:'Body weight'}
 ];
 
 export const weeklyPlans:Record<number,DayPlan>={
@@ -85,4 +85,4 @@ export const trainingBlocks=[
 
 export function localDateKey(d=new Date()){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
 export function planForDate(d=new Date()):DayPlan{const key=localDateKey(d);const block=blockForDate(key);if(dateOverrides[key])return dateOverrides[key];if(block&&(block.name.includes('Recovery')||block.name.includes('Deload')||block.name.includes('India')))return {key:'recovery-block',label:block.name,kind:'recovery',duration:'Flexible',description:block.focus,mobility:['Walking','10–15 min mobility','Optional short bodyweight session']};return weeklyPlans[d.getDay()]}
-export function blockForDate(key=localDateKey()){return trainingBlocks.find(b=>key>=b.start&&key<=b.end)??null}
+export function blockForDate(key=localDateKey()){return trainingBlocks.find(b=>key>=b.start&&key<=b.end]??null}
